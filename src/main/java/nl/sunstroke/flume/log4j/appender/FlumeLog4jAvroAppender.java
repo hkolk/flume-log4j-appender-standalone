@@ -114,12 +114,22 @@ public class FlumeLog4jAvroAppender extends AppenderSkeleton {
   protected String hostname;
   protected int port;
   protected int reconnectAttempts;
+  protected FieldAppender fieldAppender;
 
   public FlumeLog4jAvroAppender() {
     super();
 
     reconnectAttempts = defaultReconnectAttempts;
     hostname = defaultHostname;
+  }
+
+  public void setFieldAppender(String appender) {
+    try {
+      Class theClass  = Class.forName(appender);
+      this.fieldAppender = (FieldAppender) theClass.newInstance();
+    } catch (Throwable e) {
+        throw new RuntimeException(e);
+    }
   }
 
   private void connect() {
@@ -286,14 +296,13 @@ public class FlumeLog4jAvroAppender extends AppenderSkeleton {
   }
 
 
-    public static AvroFlumeEvent convertToAvroEvent(LoggingEvent e) {
+    public AvroFlumeEvent convertToAvroEvent(LoggingEvent e) {
         AvroFlumeEvent tempAvroEvt = new AvroFlumeEvent();
 
         tempAvroEvt.timestamp = e.getTimeStamp();
         tempAvroEvt.priority = toAvroPriority(e.getLevel());
-        ByteBuffer bbuf = ByteBuffer.wrap(e.getRenderedMessage().getBytes());
 
-        tempAvroEvt.body = bbuf;
+        tempAvroEvt.body = ByteBuffer.wrap(e.getRenderedMessage().getBytes());
         tempAvroEvt.nanos = System.nanoTime();
         try {
             tempAvroEvt.host = InetAddress.getLocalHost().getCanonicalHostName();
@@ -302,7 +311,11 @@ public class FlumeLog4jAvroAppender extends AppenderSkeleton {
         }
 
 
-        tempAvroEvt.fields = new HashMap<CharSequence, ByteBuffer>();
+        if(fieldAppender != null) {
+            tempAvroEvt.fields = fieldAppender.getFields(e);
+        } else {
+            tempAvroEvt.fields = new HashMap<CharSequence, ByteBuffer>();;
+        }
         /*
         for (String s : e.getAttrs().keySet()) {
             // wrap a ByteBuffer around e.getAttrs().get(s)
@@ -314,7 +327,7 @@ public class FlumeLog4jAvroAppender extends AppenderSkeleton {
         return tempAvroEvt;
     }
 
-    private static Priority toAvroPriority(Level level) {
+    private Priority toAvroPriority(Level level) {
             if (level == Level.DEBUG)
                 return Priority.DEBUG;
             if (level == Level.INFO)
