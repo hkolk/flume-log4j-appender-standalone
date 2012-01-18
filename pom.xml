@@ -10,16 +10,16 @@
         <connection>scm:git:ssh://git@github.com/hkolk/flume-log4j-appender-standalone.git</connection>
     </scm>
     <!-- internal eBay repo. Gonna fix this later. Maybe -->
-    <repositories>
+    <distributionManagement>
         <repository>
-            <id>mpnexus-public</id>
-            <url>http://mpnexus.corp.ebay.com/content/groups/public</url>
+            <id>mp.releases</id>
+            <url>http://mpnexus.corp.ebay.com/content/repositories/libs-releases-local</url>
         </repository>
-        <repository>
-            <id>mpnexus-non-public</id>
-            <url>http://mpnexus.corp.ebay.com/content/groups/non-public</url>
-        </repository>
-    </repositories>
+        <snapshotRepository>
+            <id>mp.snapshots</id>
+            <url>http://mpnexus.corp.ebay.com/content/repositories/libs-snapshots-local</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
