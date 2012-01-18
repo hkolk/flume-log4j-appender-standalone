@@ -9,6 +9,17 @@
     <scm>
         <connection>scm:git:ssh://git@github.com/hkolk/flume-log4j-appender-standalone.git</connection>
     </scm>
+    <!-- internal eBay repo. Gonna fix this later. Maybe -->
+    <repositories>
+        <repository>
+            <id>mpnexus-public</id>
+            <url>http://mpnexus.corp.ebay.com/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>mpnexus-non-public</id>
+            <url>http://mpnexus.corp.ebay.com/content/groups/non-public</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
