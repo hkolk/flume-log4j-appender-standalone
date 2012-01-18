@@ -4,7 +4,7 @@
     <groupId>nl.sunstroke</groupId>
     <artifactId>flume-log4j-appender</artifactId>
     <name>A log4j appender for Flume</name>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:ssh://git@github.com/hkolk/flume-log4j-appender-standalone.git</connection>
